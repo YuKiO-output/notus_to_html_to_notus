@@ -1,14 +1,16 @@
 # notus_to_html_to_notus
 
-A new Flutter project.
+Notus to html converter.
+Html to notus converter.
 
 ## Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+To convert notus to html use:
+NotusToHTML.getHtmlFromNotus(_notusDocument);
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+To convert html to notus use:
+HtmlToNotus.getNotusFromHtml(htmlDoc);
+
+Note that it this release only supports the following html tags:
+h1, h2, p, ul, ol, li, b.
+More will be added in the next release. The library is compatible with the zefyrka package.
