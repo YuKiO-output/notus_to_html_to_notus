@@ -1,7 +1,6 @@
 library notus_to_html_to_notus;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export './src/models/attributes.dart';
+export './src/models/notus_node.dart';
+export './src/html_to_notus.dart';
+export './src/notus_to_html.dart';
