@@ -1,7 +1,6 @@
 name: notus_to_html_to_notus
 description: Converts a document in notus format to html and vice versa
 version: 0.0.1
-author: Diana Szczepankowska <dianaszczepankowska@gmail.com>
 homepage: https://github.com/Diana813/notus_to_html_to_notus
 
 environment:
