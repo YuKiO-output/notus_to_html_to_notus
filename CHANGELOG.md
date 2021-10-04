@@ -1,4 +1,4 @@
-## 0.0.1 - 2021-10-03
+## 0.0.2 - 2021-10-03
 
 * This release only supports the following html tags:
   h1, h2, p, ul, ol, li, b.
