@@ -5,21 +5,24 @@ import 'package:zefyrka/zefyrka.dart';
 import 'models/notus_node.dart';
 
 class NotusToHTML {
-  static NotusNode checkInsartIsString(dynamic i) {
+  static NotusNode checkInsartIsString(i) {
     //Check String type
-    if (i is String) {
+    if (i.toString().contains("{_type: hr, _inline: false}") == false) {
       var note = NotusNode.fromJson(i);
       return note;
     } else {
-      var note = NotusNode(attributes: null, insert: "_");
+      var note = NotusNode(insert: "-");
       return note;
     }
   }
+
   static List<NotusNode> _getJsonLine(var node) {
     String childString = jsonEncode(node.toDelta());
-    List<NotusNode> line = List<NotusNode>.from(jsonDecode(childString).map((i) {
+    List<NotusNode> line =
+        List<NotusNode>.from(jsonDecode(childString).map((i) {
       //An error occurs because hr is a Map type. Avoidance processing.
-      var note = checkInsartIsString(i);
+      print("content：${i.toString()}");
+      NotusNode note = checkInsartIsString(i);
       return note;
     }));
     return line;
@@ -31,6 +34,9 @@ class NotusToHTML {
       List<NotusNode> notusDocLine =
           _getJsonLine(notusDocument.root.children.elementAt(i));
       if (notusDocument.root.children.elementAt(i).runtimeType == LineNode) {
+        if (notusDocLine.elementAt(notusDocLine.length - 1) == null) {
+          return;
+        }
         html = html + _decodeNotusLine(notusDocLine);
       } else if (notusDocument.root.children.elementAt(i).runtimeType ==
           BlockNode) {
@@ -53,8 +59,8 @@ class NotusToHTML {
   }
 
   static _getBlockAttributes(NotusNode notusModel) {
-        //Convert to <p> </ p> if null is included
-   if (notusModel.attributes == null) {
+    //Convert to <p> </ p> if null is included
+    if (notusModel.attributes == null) {
       return ['<p>', '</p>'];
     } else if (notusModel.attributes!.block == 'ul') {
       return ['<ul>', '</ul>'];
@@ -66,7 +72,8 @@ class NotusToHTML {
   static _decodeNotusLine(List<NotusNode> notusDocLine) {
     String html = '';
     List<String> attributes =
-        _getLineAttributes(notusDocLine.elementAt(notusDocLine.length - 1));
+        _getLineAttributes(notusDocLine.elementAt(notusDocLine.length - 1)) ??
+            ['<p>', '</p>'];
     html = attributes[0] + _decodeLineChildren(notusDocLine) + attributes[1];
     return html;
   }
@@ -89,7 +96,8 @@ class NotusToHTML {
     List<List<NotusNode>> blockLinesList = _splitBlockIntoLines(notusDocLine);
 
     List<String> attributes =
-        _getBlockAttributes(notusDocLine.elementAt(notusDocLine.length - 1));
+        _getBlockAttributes(notusDocLine.elementAt(notusDocLine.length - 1)) ??
+            ["", ""];
     for (int i = 0; i < blockLinesList.length; i++) {
       childrenHtml = childrenHtml +
           '<li>' +
