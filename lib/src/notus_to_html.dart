@@ -5,10 +5,23 @@ import 'package:zefyrka/zefyrka.dart';
 import 'models/notus_node.dart';
 
 class NotusToHTML {
+  static NotusNode checkInsartIsString(dynamic i) {
+    //Check String type
+    if (i is String) {
+      var note = NotusNode.fromJson(i);
+      return note;
+    } else {
+      var note = NotusNode(attributes: null, insert: "_");
+      return note;
+    }
+  }
   static List<NotusNode> _getJsonLine(var node) {
     String childString = jsonEncode(node.toDelta());
-    List<NotusNode> line = List<NotusNode>.from(
-        jsonDecode(childString).map((i) => NotusNode.fromJson(i)));
+    List<NotusNode> line = List<NotusNode>.from(jsonDecode(childString).map((i) {
+      //An error occurs because hr is a Map type. Avoidance processing.
+      var note = checkInsartIsString(i);
+      return note;
+    }));
     return line;
   }
 
@@ -40,7 +53,10 @@ class NotusToHTML {
   }
 
   static _getBlockAttributes(NotusNode notusModel) {
-    if (notusModel.attributes!.block == 'ul') {
+        //Convert to <p> </ p> if null is included
+   if (notusModel.attributes == null) {
+      return ['<p>', '</p>'];
+    } else if (notusModel.attributes!.block == 'ul') {
       return ['<ul>', '</ul>'];
     } else if (notusModel.attributes!.block == 'ol') {
       return ['<ol>', '</ol>'];
