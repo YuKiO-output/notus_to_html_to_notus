@@ -11,11 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-#   zefyrka: ^1.0.10
-  zefyrka:
-   git:
-     url: https://github.com/YuKiO-output/zefyrka.git
-     ref: main
+  zefyrka: ^1.0.10
   html: ^0.15.0
 
 
