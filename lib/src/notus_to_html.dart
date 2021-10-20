@@ -85,7 +85,9 @@ class NotusToHTML {
         html = html + notusDocLine.elementAt(i).insert!;
       } else if (notusDocLine.elementAt(i).attributes!.b == true) {
         html = html + '<b>' + notusDocLine.elementAt(i).insert! + '</b>';
-      }
+      }　else {
+        //add italic
+        html = html + '<i>' + notusDocLine.elementAt(i).insert! + '</i>';
     }
     return html;
   }
