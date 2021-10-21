@@ -6,12 +6,15 @@ import 'models/notus_node.dart';
 
 class NotusToHTML {
   static NotusNode checkInsartIsString(i) {
-    //Check String type
     if (i.toString().contains("{_type: hr, _inline: false}") == false) {
       var note = NotusNode.fromJson(i);
       return note;
     } else {
-      var note = NotusNode(insert: "-");
+      var map = {
+        "insert": "",
+        "attributes": {"hr": true}
+      };
+      var note = NotusNode.fromJson(map);
       return note;
     }
   }
@@ -21,7 +24,7 @@ class NotusToHTML {
     List<NotusNode> line =
         List<NotusNode>.from(jsonDecode(childString).map((i) {
       //An error occurs because hr is a Map type. Avoidance processing.
-      print("content：${i.toString()}");
+      print("：${i.toString()}");
       NotusNode note = checkInsartIsString(i);
       return note;
     }));
@@ -53,19 +56,28 @@ class NotusToHTML {
       return ['<h1>', '</h1>'];
     } else if (notusModel.attributes!.heading == 2) {
       return ['<h2>', '</h2>'];
+    } else if (notusModel.attributes!.heading == 3) {
+      return ['<h3>', '</h3>'];
     } else if (notusModel.attributes!.b == true) {
       return ['<b>', '</b>'];
+    } else if (notusModel.attributes!.i == true) {
+      return ['<i>', '</i>'];
+    } else if (notusModel.attributes!.hr == true) {
+      return ['<hr>', ''];
     }
   }
 
   static _getBlockAttributes(NotusNode notusModel) {
-    //Convert to <p> </ p> if null is included
     if (notusModel.attributes == null) {
-      return ['<p>', '</p>'];
+      return ["", ""];
     } else if (notusModel.attributes!.block == 'ul') {
       return ['<ul>', '</ul>'];
     } else if (notusModel.attributes!.block == 'ol') {
       return ['<ol>', '</ol>'];
+    } else if (notusModel.attributes!.block == 'code') {
+      return ['<code>', '</code>'];
+    } else if (notusModel.attributes!.block == 'quote') {
+      return ['<blockquote>', '</blockquote>'];
     }
   }
 
@@ -73,7 +85,7 @@ class NotusToHTML {
     String html = '';
     List<String> attributes =
         _getLineAttributes(notusDocLine.elementAt(notusDocLine.length - 1)) ??
-            ['<p>', '</p>'];
+            ['', ''];
     html = attributes[0] + _decodeLineChildren(notusDocLine) + attributes[1];
     return html;
   }
@@ -85,9 +97,13 @@ class NotusToHTML {
         html = html + notusDocLine.elementAt(i).insert!;
       } else if (notusDocLine.elementAt(i).attributes!.b == true) {
         html = html + '<b>' + notusDocLine.elementAt(i).insert! + '</b>';
-      }　else {
+      } else if (notusDocLine.elementAt(i).attributes!.i == true) {
         //add italic
         html = html + '<i>' + notusDocLine.elementAt(i).insert! + '</i>';
+      } else if (notusDocLine.elementAt(i).attributes!.hr == true) {
+        //add hr
+        html = html + '<hr>';
+      }
     }
     return html;
   }
